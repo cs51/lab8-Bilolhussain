@@ -132,10 +132,11 @@ one. If there is no listener with that id, do nothing.
 ......................................................................*)
             
   let remove_listener (evt : 'a event) (i : id) : unit =
+   let helper evt i =
    match !evt with 
-   |[] -> () 
-   | hd::tl -> if (hd.id = id) then remove_listener tl
-               else evt:= (hd :: remove_listener tl)
+   | [] -> () 
+   | hd::tl -> if (hd.id = i) then remove_listener(ref tl) i
+               else (hd :: remove_listener tl i) in evt := (remove_listener !evt i)
     
 
 (*......................................................................
